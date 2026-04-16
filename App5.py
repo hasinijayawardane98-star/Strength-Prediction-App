@@ -28,13 +28,91 @@ X_base = data.gwp_data[0][[0]].clone()
 st.title("Concrete Strength Predictor")
 st.write("Enter mix proportions to predict strength and GWP")
 
-cement = st.number_input("Cement (kg/m3)", value=300, step=1, format="%d")
-fly_ash = st.number_input("Fly Ash (kg/m3)", value=50,step=1, format="%d")
-slag = st.number_input("Slag (kg/m3)", value=50, step=1, format="%d")
-water = st.number_input("Water (kg/m3)", value=180, step=1, format="%d")
+cement = st.number_input("Cement (kg/m3) ["Range: 0 – 400 kg/m³"]",min_value=0.0,max_value=400.0, value=300, step=1, format="%d")
+fly_ash = st.number_input("Fly Ash (kg/m3) ["Range: 0 – 400 kg/m³"]",min_value=0.0,max_value=400.0, value=50,step=1, format="%d")
+slag = st.number_input("Slag (kg/m3) ["Range: 0 – 400 kg/m³"]",min_value=0.0,max_value=400.0, value=50, step=1, format="%d")
+water = st.number_input("Water (kg/m3) ["Range: 100 – 250 kg/m³"]",min_value=100.0,max_value=250.0, value=180, step=1, format="%d")
 hrwr = st.number_input("HRWR (kg/m3)", value=0, step=1, format="%d")
-fine = st.number_input("Fine Aggregate (kg/m3)", value=700, step=1, format="%d")
-coarse = st.number_input("Coarse Aggregates (kg/m3)", value=900, step=1, format="%d")
+coarse = st.number_input("Coarse Aggregates (kg/m3) ["Range: 500 – 2000 kg/m³"]",min_value=500.0,max_value=2000.0, value=900, step=1, format="%d")
+fine = st.number_input("Fine Aggregate (kg/m3) ["Range: 500 – 1000 kg/m³"]",min_value=500.0,max_value=1000.0, value=700, step=1, format="%d")
+
+# =========================
+# CONSTANT DENSITIES (kg/m³)
+# =========================
+DENSITY = {
+    "cement": 3132.935,
+    "fly_ash": 2594.15,
+    "slag": 2893.475,
+    "water": 997.75,
+    "hrwr": 1100,
+    "fine": 2650,
+    "coarse": 2673.97
+}
+# =========================
+# w/cm RATIO
+# =========================
+cementitious = cement + fly_ash + slag
+
+if cementitious > 0:
+    w_cm = water / cementitious
+    st.info(f"Water-to-Cementitious Ratio (w/cm) = {w_cm:.3f}")
+else:
+    st.warning("Enter cementitious materials to calculate w/cm ratio")
+
+# =========================
+# VOLUME CALCULATIONS (m³)
+# =========================
+vol_cement = cement / DENSITY["cement"]
+vol_flyash = fly_ash / DENSITY["fly_ash"]
+vol_slag = slag / DENSITY["slag"]
+vol_water = water / DENSITY["water"]
+vol_hrwr = hrwr / DENSITY["hrwr"]
+vol_coarse = fine / DENSITY["coarse"]
+
+# =========================
+# AUTO CALCULATE FINE
+# =========================
+remaining_volume = 1 - (
+    vol_cement + vol_flyash + vol_slag +
+    vol_water + vol_hrwr + vol_coarse
+)
+
+if remaining_volume > 0:
+    fine = remaining_volume * DENSITY["fine"]
+    vol_fine = remaining_volume
+    st.success(f"Auto Fine Aggregate = {fine:.2f} kg/m³")
+else:
+    fine = 0
+    vol_fine = 0
+    st.error("❌ Total volume exceeded before adding fine aggregate!")
+
+# =========================
+# DISPLAY VOLUMES
+# =========================
+st.subheader("Component Volumes (m³)")
+
+st.write(f"Cement: {vol_cement:.4f}")
+st.write(f"Fly Ash: {vol_flyash:.4f}")
+st.write(f"Slag: {vol_slag:.4f}")
+st.write(f"Water: {vol_water:.4f}")
+st.write(f"HRWR: {vol_hrwr:.4f}")
+st.write(f"Coarse Aggregate: {vol_coarse:.4f}")
+st.write(f"Fine Aggregate: {vol_fine:.4f}")
+
+# =========================
+# TOTAL VOLUME CHECK
+# =========================
+total_volume = (
+    vol_cement + vol_flyash + vol_slag +
+    vol_water + vol_hrwr + vol_fine + vol_coarse
+)
+
+st.write(f"Total Volume = {total_volume:.4f} m³")
+
+if total_volume > 1:
+    st.error("❌ Total volume exceeds 1 m³")
+else:
+    st.success("✅ Total volume within 1 m³")
 
 # =========================
 # FUNCTION: BUILD INPUT
