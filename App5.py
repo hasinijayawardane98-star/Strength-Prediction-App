@@ -86,7 +86,7 @@ if st.button("Get GWP"):
    
    post = model.gwp_model.posterior(X)
    pred = post.mean.detach().squeeze()
-   gwp_value = pred.mean().item()
+   gwp_value = -pred.mean().item()
    st.success(f"GWP = {gwp_value:.3f} kg CO₂/m³")
 
 
