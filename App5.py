@@ -59,7 +59,12 @@ with c1:
 vol_cement = cement / DENSITY["cement"]
 
 with c2:
-    st.metric("Cement Volume", f"{vol_cement:.4f}")
+    st.markdown(
+    f"""
+    Cement Volume  
+    <b style='font-size:16px;'>{vol_cement:.4f} </b>
+    """,
+    unsafe_allow_html=True)
 
 # =========================
 # ROW 2 — FLY ASH
@@ -72,7 +77,14 @@ with c1:
 vol_flyash = fly_ash / DENSITY["fly_ash"]
 
 with c2:
-    st.metric("Fly Ash Volume", f"{vol_flyash:.4f}")
+    st.markdown(
+    f"""
+    Fly Ash Volume  
+    <b style='font-size:16px;'>{vol_flyash:.4f} </b>
+    """,
+    unsafe_allow_html=True
+)
+    
 
 # =========================
 # ROW 3 — SLAG
@@ -85,7 +97,13 @@ with c1:
 vol_slag = slag / DENSITY["slag"]
 
 with c2:
-    st.metric("Slag Volume", f"{vol_slag:.4f}")
+    st.markdown(
+    f"""
+    Slag Volume  
+    <b style='font-size:16px;'>{vol_slag:.4f} </b>
+    """,
+    unsafe_allow_html=True
+)
 
 # =========================
 # ROW 4 — WATER
@@ -98,7 +116,13 @@ with c1:
 vol_water = water / DENSITY["water"]
 
 with c2:
-    st.metric("Water Volume", f"{vol_water:.4f}")
+    st.markdown(
+    f"""
+    Water Volume  
+    <b style='font-size:16px;'>{vol_water:.4f} </b>
+    """,
+    unsafe_allow_html=True
+)
 
 # =========================
 # ROW 5 — HRWR
@@ -111,7 +135,13 @@ with c1:
 vol_hrwr = hrwr / DENSITY["hrwr"]
 
 with c2:
-    st.metric("HRWR Volume", f"{vol_hrwr:.4f}")
+    st.markdown(
+    f"""
+    HRWR Volume  
+    <b style='font-size:16px;'>{vol_hrwr:.4f} </b>
+    """,
+    unsafe_allow_html=True
+)
 
 # =========================
 # ROW 6 — COARSE AGG
@@ -124,7 +154,13 @@ with c1:
 vol_coarse = coarse / DENSITY["coarse"]
 
 with c2:
-    st.metric("Coarse Aggregate Volume", f"{vol_coarse:.4f}")
+    st.markdown(
+    f"""
+    Coarse Aggregate Volume  
+    <b style='font-size:16px;'>{vol_coarse:.4f} </b>
+    """,
+    unsafe_allow_html=True
+)
 
 # =========================
 # ROW — FINE AGGREGATE (USER INPUT WITH LIMIT)
@@ -137,7 +173,13 @@ with c1:
 input_vol_fine = fine_input/ DENSITY["fine"]
 
 with c2:
-    st.metric("Fine Aggregate Volume", f"{input_vol_fine:.4f}")
+    st.markdown(
+    f"""
+    Fine Aggregate Volume  
+    <b style='font-size:16px;'>{input_vol_fine:.4f} </b>
+    """,
+    unsafe_allow_html=True
+)
 
 # calculate volumes WITHOUT fine first
 base_volume = (
@@ -166,13 +208,18 @@ vol_fine = fine / DENSITY["fine"]
 
 c1, gap, c2 = st.columns([3, 1, 2])
 with c1:
-    st.metric("Auto Calculated Fine Aggregate (kg/m3)", f"{fine:.4f}")
+    st.markdown(
+    f"""
+    Auto Calculated Fine Aggregate (kg/m3)  
+    <b style='font-size:16px;'>{fine:.4f} </b>
+    """,
+    unsafe_allow_html=True
+)
 with c2:
-    st.metric("Auto Calculated Fine Aggregate Volume", f"{vol_fine:.4f}")
     st.markdown(
     f"""
     Auto Calculated Fine Aggregate Volume  
-    <b style='font-size:16px;'>{vol_fine:.4f} m³</b>
+    <b style='font-size:16px;'>{vol_fine:.4f} </b>
     """,
     unsafe_allow_html=True
 )
