@@ -39,8 +39,6 @@ DENSITY = {
     "coarse": 2673.97
 }
 
-st.subheader("Concrete Mix Design")
-
 # =========================
 # HEADER
 # =========================
@@ -171,6 +169,13 @@ with c1:
     st.metric("Auto Calculated Fine Aggregate (kg/m3)", f"{fine:.4f}")
 with c2:
     st.metric("Auto Calculated Fine Aggregate Volume", f"{vol_fine:.4f}")
+    st.markdown(
+    f"""
+    Auto Calculated Fine Aggregate Volume  
+    <span style='font-size:12px;'>{vol_fine:.4f} m³</span>
+    """,
+    unsafe_allow_html=True
+)
 # =========================
 # w/cm RATIO
 # =========================
