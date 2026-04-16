@@ -136,6 +136,11 @@ c1, gap, c2 = st.columns([3, 1, 2])
 with c1:
     fine_input = st.number_input("Fine Aggregate (kg/m3),[Range: 500 – 1000 kg/m³]",min_value=500,max_value=1000, value=700, step=1)
 
+input_vol_fine = fine_input/ DENSITY["fine"]
+
+with c2:
+    st.metric("Fine Aggregate Volume", f"{input_vol_fine:.4f}")
+
 # calculate volumes WITHOUT fine first
 base_volume = (
     vol_cement + vol_flyash + vol_slag +
@@ -161,11 +166,11 @@ else:
 # compute final fine volume
 vol_fine = fine / DENSITY["fine"]
 
+c1, gap, c2 = st.columns([3, 1, 2])
+with c1:
+    st.metric("Auto Calculated Fine Aggregate (kg/m3)", f"{fine:.4f}")
 with c2:
-    st.markdown(
-        f"<p style='font-size:13px;'>{vol_fine:.4f} m³</p>",
-        unsafe_allow_html=True
-    )
+    st.metric("Auto Calculated Fine Aggregate Volume", f"{vol_fine:.4f}")
 # =========================
 # w/cm RATIO
 # =========================
