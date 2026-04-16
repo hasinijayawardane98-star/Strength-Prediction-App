@@ -25,8 +25,8 @@ logger = logging.getLogger(__name__)
 
 # Path to the repository root, resolved from the package location.
 # This allows data loading to work regardless of the current working directory.
-REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_PATH = os.path.join(REPO_DIR, "data", "boxcrete_data.csv")
+
+DATA_PATH = os.path.join(os.path.dirname(__file__),"boxcrete_data.csv")
 
 # linear constraint type (ind, coeffs, value)
 T_CONSTRAINT = tuple[Tensor, Tensor, float]
