@@ -27,14 +27,16 @@ X_base = data.gwp_data[0][[0]].clone()
 # =========================
 st.title("Concrete Strength Predictor")
 st.write("Enter mix proportions to predict strength and GWP")
-
-cement = st.number_input("Cement (kg/m3) [Range: 0 – 400 kg/m³]",min_value=0,max_value=400, value=300, step=1, format="%d")
-fly_ash = st.number_input("Fly Ash (kg/m3) [Range: 0 – 400 kg/m³]",min_value=0,max_value=400, value=50,step=1, format="%d")
-slag = st.number_input("Slag (kg/m3) [Range: 0 – 400 kg/m³]",min_value=0,max_value=400, value=50, step=1, format="%d")
-water = st.number_input("Water (kg/m3) [Range: 100 – 250 kg/m³]",min_value=100,max_value=250, value=180, step=1, format="%d")
-hrwr = st.number_input("HRWR (kg/m3)", value=0, step=1, format="%d")
-coarse = st.number_input("Coarse Aggregates (kg/m3) [Range: 500 – 2000 kg/m³]",min_value=500,max_value=2000, value=900, step=1, format="%d")
-fine = st.number_input("Fine Aggregate (kg/m3) [Range: 500 – 1000 kg/m³]",min_value=500,max_value=1000, value=700, step=1, format="%d")
+col1, col2 = st.columns([1, 1])
+with col1:
+    st.subheader("Input Mix Proportions")
+    cement = st.number_input("Cement (kg/m3) [Range: 0 – 400 kg/m³]",min_value=0,max_value=400, value=300, step=1, format="%d")
+    fly_ash = st.number_input("Fly Ash (kg/m3) [Range: 0 – 400 kg/m³]",min_value=0,max_value=400, value=50,step=1, format="%d")
+    slag = st.number_input("Slag (kg/m3) [Range: 0 – 400 kg/m³]",min_value=0,max_value=400, value=50, step=1, format="%d")
+    water = st.number_input("Water (kg/m3) [Range: 100 – 250 kg/m³]",min_value=100,max_value=250, value=180, step=1, format="%d")
+    hrwr = st.number_input("HRWR (kg/m3)", value=0, step=1, format="%d")
+    coarse = st.number_input("Coarse Aggregates (kg/m3) [Range: 500 – 2000 kg/m³]",min_value=500,max_value=2000, value=900, step=1, format="%d")
+    fine = st.number_input("Fine Aggregate (kg/m3) [Range: 500 – 1000 kg/m³]",min_value=500,max_value=1000, value=700, step=1, format="%d")
 
 # =========================
 # CONSTANT DENSITIES (kg/m³)
@@ -88,17 +90,18 @@ else:
 
 # =========================
 # DISPLAY VOLUMES
-# =========================
-st.subheader("Component Volumes (m³)")
-
-st.write(f"Cement: {vol_cement:.4f}")
-st.write(f"Fly Ash: {vol_flyash:.4f}")
-st.write(f"Slag: {vol_slag:.4f}")
-st.write(f"Water: {vol_water:.4f}")
-st.write(f"HRWR: {vol_hrwr:.4f}")
-st.write(f"Coarse Aggregate: {vol_coarse:.4f}")
-st.write(f"Fine Aggregate: {vol_fine:.4f}")
-
+# 
+with col2:
+    st.subheader("Component Volumes (m³)")
+    
+    st.write(f"Cement: {vol_cement:.4f}")
+    st.write(f"Fly Ash: {vol_flyash:.4f}")
+    st.write(f"Slag: {vol_slag:.4f}")
+    st.write(f"Water: {vol_water:.4f}")
+    st.write(f"HRWR: {vol_hrwr:.4f}")
+    st.write(f"Coarse Aggregate: {vol_coarse:.4f}")
+    st.write(f"Fine Aggregate: {vol_fine:.4f}")
+   
 # =========================
 # TOTAL VOLUME CHECK
 # =========================
