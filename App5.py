@@ -150,7 +150,7 @@ c1, gap, c2 = st.columns([3, 1, 2])
 
 with c1:
     st.markdown("**Fine Aggregate (Auto)**")
-    st.write(f"{coarse:.2f} kg/m³")
+    st.write(f"{fine:.2f} kg/m³")
 
 with c2:
     st.metric("Volume", f"{vol_fine:.4f}")
