@@ -25,8 +25,8 @@ X_base = data.gwp_data[0][[0]].clone()
 # =========================
 # UI
 # =========================
-st.title("Concrete Strength Prediction")
-
+st.title("Concrete Strength Predictor")
+st.write("Enter mix proportions to predict strength and GWP")
 cement = st.number_input("Cement (kg/m3)", value=300, step=1, format="%d")
 fly_ash = st.number_input("Fly Ash (kg/m3)", value=50,step=1, format="%d")
 slag = st.number_input("Slag (kg/m3)", value=50, step=1, format="%d")
