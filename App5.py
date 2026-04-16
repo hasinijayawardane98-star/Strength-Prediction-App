@@ -172,7 +172,7 @@ with c2:
     st.markdown(
     f"""
     Auto Calculated Fine Aggregate Volume  
-    <span style='font-size:12px;'>{vol_fine:.4f} m³</span>
+    <span style='font-size:16px;'>{vol_fine:.4f} m³</span>
     """,
     unsafe_allow_html=True
 )
