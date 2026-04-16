@@ -126,7 +126,7 @@ with c1:
 vol_coarse = coarse / DENSITY["coarse"]
 
 with c2:
-    st.metric("Volume", f"{vol_fine:.4f}")
+    st.metric("Volume", f"{vol_coarse:.4f}")
 
 # =========================
 # AUTO FINE CALCULATION
