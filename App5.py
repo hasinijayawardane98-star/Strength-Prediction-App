@@ -1,0 +1,138 @@
+import streamlit as st
+import torch
+import matplotlib.pyplot as plt
+import numpy as np
+
+# =========================
+# LOAD DATA (for structure only)
+# =========================
+from boxcrete.utils import load_concrete_strength, get_bounds
+
+data = load_concrete_strength()
+data.bounds = get_bounds(data.X_columns)
+
+cols = data.X_columns[:-1]
+
+# =========================
+# LOAD TRAINED MODEL (NO RETRAINING)
+# =========================
+model = torch.load("concrete_model.pt", weights_only=False)
+
+# =========================
+# CREATE BASE INPUT (IMPORTANT)
+# =========================
+X_base = data.gwp_data[0][[0]].clone()
+
+# =========================
+# UI
+# =========================
+st.title("Concrete Strength Prediction")
+
+cement = st.number_input("Cement (kg/m3)", value=300, step=1, format="%d")
+fly_ash = st.number_input("Fly Ash (kg/m3)", value=50,step=1, format="%d")
+slag = st.number_input("Slag (kg/m3)", value=50, step=1, format="%d")
+water = st.number_input("Water (kg/m3)", value=180, step=1, format="%d")
+hrwr = st.number_input("HRWR (kg/m3)", value=0, step=1, format="%d")
+fine = st.number_input("Fine Aggregate (kg/m3)", value=700, step=1, format="%d")
+coarse = st.number_input("Coarse Aggregates (kg/m3)", value=900, step=1, format="%d")
+
+# =========================
+# FUNCTION: BUILD INPUT
+# =========================
+def build_input(time_value):
+    X = X_base.clone()
+
+    # update values
+    X[0, cols.index("Cement (kg/m3)")] = float(cement)
+    X[0, cols.index("Fly Ash (kg/m3)")] = float(fly_ash)
+    X[0, cols.index("Slag (kg/m3)")] = float(slag)
+    X[0, cols.index("Water (kg/m3)")] = float(water)
+    X[0, cols.index("HRWR (kg/m3)")] = float(hrwr)
+    X[0, cols.index("Fine Aggregate (kg/m3)")] = float(fine)
+    X[0, cols.index("Coarse Aggregates (kg/m3)")] = float(coarse)
+
+    # add time
+    Xt = torch.cat([X, torch.tensor([[float(time_value)]])], dim=1)
+
+    return Xt
+
+# =========================
+# 28-DAY STRENGTH
+# =========================
+if st.button("Get 28-Day Strength"):
+
+    Xt = build_input(28)
+
+    post = model.strength_model.posterior(Xt)
+    pred = post.mean.detach().squeeze()
+
+    strength_28 = pred.item()
+
+    st.success(f"28-Day Strength = {strength_28:.3f} Psi")
+
+# =========================
+# GWP VALUE
+# =========================
+if st.button("Get GWP"):
+
+    # GWP model DOES NOT use time → use X without time column
+   X = X_base.clone()
+   X[0, cols.index("Cement (kg/m3)")] = float(cement)
+   X[0, cols.index("Fly Ash (kg/m3)")] = float(fly_ash)
+   X[0, cols.index("Slag (kg/m3)")] = float(slag)
+   X[0, cols.index("Water (kg/m3)")] = float(water)
+   X[0, cols.index("HRWR (kg/m3)")] = float(hrwr)
+   X[0, cols.index("Fine Aggregate (kg/m3)")] = float(fine)
+   X[0, cols.index("Coarse Aggregates (kg/m3)")] = float(coarse)
+   
+   post = model.gwp_model.posterior(X)
+   pred = post.mean.detach().squeeze()
+   gwp_value = pred.mean().item()
+   st.success(f"GWP = {gwp_value:.3f} kg CO₂/m³")
+
+
+# =========================
+# STRENGTH CURVE
+# =========================
+if st.button("Generate Strength Curve"):
+
+    days = np.linspace(1, 28, 50)   # 🔥 KEY FIX
+    predictions = []
+
+    for t in days:
+        Xt = build_input(t)
+
+        post = model.strength_model.posterior(Xt)
+        pred = post.mean.detach().squeeze()
+
+        predictions.append(pred.item())
+    
+    Xt_28 = build_input(28)
+    post_28 = model.strength_model.posterior(Xt_28)
+    pred_28 = post_28.mean.detach().squeeze()
+    strength_28 = pred_28.item()
+    
+    fig, ax = plt.subplots()
+
+    ax.plot(days, predictions,label="Strength Curve")
+
+    # 🔥 Highlight point
+    ax.scatter(28, strength_28, s=30,color="red", label="28-Day Strength")
+    ymin = min(predictions)
+    ax.vlines(28, ymin, strength_28, linestyles="--", color="red", linewidth=1.5)
+    ax.hlines(strength_28, 0, 28, linestyles="--", color="red", linewidth=1.5)
+    ax.annotate(
+    f"28-day Strength = {strength_28:.2f} MPa",
+    xy=(28, strength_28),
+    xytext=(20, strength_28 + 75),
+    ha="center",
+    arrowprops=dict(arrowstyle="->", color="red"),
+    color="red")
+    
+    ax.set_xlabel("Days")
+    ax.set_ylabel("Strength (Psi)")
+    ax.set_title("Predicted Concrete Strength Curve")
+    
+
+
+    st.pyplot(fig)
