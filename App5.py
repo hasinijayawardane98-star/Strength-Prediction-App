@@ -122,7 +122,7 @@ if st.button("Generate Strength Curve"):
     ax.vlines(28, ymin, strength_28, linestyles="--", color="red", linewidth=1.5)
     ax.hlines(strength_28, 0, 28, linestyles="--", color="red", linewidth=1.5)
     ax.annotate(
-    f"28-day Strength = {strength_28:.2f} MPa",
+    f"28-day Strength = {strength_28:.2f} Psi",
     xy=(28, strength_28),
     xytext=(20, strength_28 + 75),
     ha="center",
