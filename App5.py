@@ -171,10 +171,6 @@ with c1:
     st.metric("Auto Calculated Fine Aggregate (kg/m3)", f"{fine:.4f}")
 with c2:
     st.metric("Auto Calculated Fine Aggregate Volume", f"{vol_fine:.4f}")
-    st.markdown(
-    f"<div style='font-size:16px; font-weight:500;'> Auto Calculated Fine Aggregate Volume {vol_fine:.4f} m³</div>",
-    unsafe_allow_html=True
-)
 # =========================
 # w/cm RATIO
 # =========================
