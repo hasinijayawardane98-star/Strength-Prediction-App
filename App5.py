@@ -281,7 +281,7 @@ if st.button("Get 28-Day Strength"):
 
     strength_28 = pred.item()
 
-    st.success(f"28-Day Strength = {strength_28:.3f} Psi")
+    st.success(f"28-Day Strength = {strength_28:.3f} psi")
 
 # =========================
 # GWP VALUE
@@ -335,7 +335,7 @@ if st.button("Generate Strength Curve"):
     ax.vlines(28, ymin, strength_28, linestyles="--", color="red", linewidth=1.5)
     ax.hlines(strength_28, 0, 28, linestyles="--", color="red", linewidth=1.5)
     ax.annotate(
-    f"28-day Strength = {strength_28:.2f} Psi",
+    f"28-day Strength = {strength_28:.2f} psi",
     xy=(28, strength_28),
     xytext=(20, strength_28 + 75),
     ha="center",
@@ -343,7 +343,7 @@ if st.button("Generate Strength Curve"):
     color="red")
     
     ax.set_xlabel("Days")
-    ax.set_ylabel("Strength (Psi)")
+    ax.set_ylabel("Strength (psi)")
     ax.set_title("Predicted Concrete Strength Curve")
     
 
