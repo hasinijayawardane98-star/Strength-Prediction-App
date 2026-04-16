@@ -6,7 +6,7 @@ import numpy as np
 # =========================
 # LOAD DATA (for structure only)
 # =========================
-from boxcrete.utils import load_concrete_strength, get_bounds
+from utils import load_concrete_strength, get_bounds
 
 data = load_concrete_strength()
 data.bounds = get_bounds(data.X_columns)
