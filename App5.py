@@ -61,7 +61,7 @@ with c1:
 vol_cement = cement / DENSITY["cement"]
 
 with c2:
-    st.metric("Volume", f"{vol_cement:.4f}")
+    st.metric("Cement Volume", f"{vol_cement:.4f}")
 
 # =========================
 # ROW 2 — FLY ASH
@@ -74,7 +74,7 @@ with c1:
 vol_flyash = fly_ash / DENSITY["fly_ash"]
 
 with c2:
-    st.metric("Volume", f"{vol_flyash:.4f}")
+    st.metric("Fly Ash Volume", f"{vol_flyash:.4f}")
 
 # =========================
 # ROW 3 — SLAG
@@ -87,7 +87,7 @@ with c1:
 vol_slag = slag / DENSITY["slag"]
 
 with c2:
-    st.metric("Volume", f"{vol_slag:.4f}")
+    st.metric("Slag Volume", f"{vol_slag:.4f}")
 
 # =========================
 # ROW 4 — WATER
@@ -100,7 +100,7 @@ with c1:
 vol_water = water / DENSITY["water"]
 
 with c2:
-    st.metric("Volume", f"{vol_water:.4f}")
+    st.metric("Water Volume", f"{vol_water:.4f}")
 
 # =========================
 # ROW 5 — HRWR
@@ -113,7 +113,7 @@ with c1:
 vol_hrwr = hrwr / DENSITY["hrwr"]
 
 with c2:
-    st.metric("Volume", f"{vol_hrwr:.4f}")
+    st.metric("HRWR Volume", f"{vol_hrwr:.4f}")
 
 # =========================
 # ROW 6 — COARSE AGG
@@ -126,35 +126,46 @@ with c1:
 vol_coarse = coarse / DENSITY["coarse"]
 
 with c2:
-    st.metric("Volume", f"{vol_coarse:.4f}")
+    st.metric("Coarse Aggregate Volume", f"{vol_coarse:.4f}")
 
 # =========================
-# AUTO FINE CALCULATION
-# =========================
-remaining_volume = 1 - (
-    vol_cement + vol_flyash + vol_slag +
-    vol_water + vol_hrwr + vol_coarse
-)
-
-if remaining_volume > 0:
-    fine = remaining_volume * DENSITY["fine"]
-    vol_fine = remaining_volume
-else:
-    fine = 0
-    vol_fine = 0
-
-# =========================
-# ROW 7 — FINE (AUTO)
+# ROW — FINE AGGREGATE (USER INPUT WITH LIMIT)
 # =========================
 c1, gap, c2 = st.columns([3, 1, 2])
 
 with c1:
-    st.markdown("**Fine Aggregate (Auto)**")
-    st.write(f"{fine:.2f} kg/m³")
+    fine_input = st.number_input("Fine Aggregate (kg/m3),[Range: 500 – 1000 kg/m³]",min_value=500,max_value=1000, value=700, step=1)
+
+# calculate volumes WITHOUT fine first
+base_volume = (
+    vol_cement + vol_flyash + vol_slag +
+    vol_water + vol_hrwr + vol_coarse
+)
+
+# maximum allowed fine volume
+max_fine_volume = 1 - base_volume
+
+if max_fine_volume > 0:
+    max_fine_mass = max_fine_volume * DENSITY["fine"]
+else:
+    max_fine_mass = 0
+
+# check if user input is valid
+if fine_input > max_fine_mass:
+    st.warning("⚠️ Fine aggregate too high → adjusted to fit 1 m³ total volume")
+    fine = max_fine_mass
+else:
+    st.warning("⚠️ Fine aggregate too low → adjusted to fit 1 m³ total volume")
+    fine = max_fine_mass
+
+# compute final fine volume
+vol_fine = fine / DENSITY["fine"]
 
 with c2:
-    st.metric("Volume", f"{vol_fine:.4f}")
-
+    st.markdown(
+        f"<p style='font-size:13px;'>{vol_fine:.4f} m³</p>",
+        unsafe_allow_html=True
+    )
 # =========================
 # w/cm RATIO
 # =========================
