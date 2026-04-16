@@ -1,7 +1,8 @@
 streamlit
-torch --index-url https://download.pytorch.org/whl/cpu
 numpy
 matplotlib
 pandas
-botorch==0.10.0
+
+torch==2.2.0 --index-url https://download.pytorch.org/whl/cpu
 gpytorch==1.11
+botorch==0.10.0
