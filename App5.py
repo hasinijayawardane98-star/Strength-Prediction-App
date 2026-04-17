@@ -198,10 +198,10 @@ else:
 # check if user input is valid
 if fine_input > max_fine_mass:
     st.warning("⚠️ Fine aggregate too high → adjusted to fit 1 m³ total volume")
-    fine = max_fine_mass
 else:
     st.warning("⚠️ Fine aggregate too low → adjusted to fit 1 m³ total volume")
-    fine = max_fine_mass
+
+fine = max_fine_mass
 
 # compute final fine volume
 vol_fine = fine / DENSITY["fine"]
