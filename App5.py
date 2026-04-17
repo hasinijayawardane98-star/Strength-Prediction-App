@@ -247,8 +247,8 @@ total_volume = (
 st.write(f"### Total Volume = {total_volume:.4f} m³")
 
 if total_volume > 1:
-    st.error("❌ Total volume exceeds 1 m³")
-     st.stop()
+    st.error("❌ Total volume exceeds 1 m³. Please adjust your inputs and try again")
+    st.stop()
 else:
     st.success("✅ Total volume within limit")
 
