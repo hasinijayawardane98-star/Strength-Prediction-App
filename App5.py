@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # =========================
-# LOAD DATA (for structure only)
+# LOAD DATA
 # =========================
 from utils import load_concrete_strength, get_bounds
 data = load_concrete_strength()
@@ -13,7 +13,7 @@ data.bounds = get_bounds(data.X_columns)
 cols = data.X_columns[:-1]
 
 # =========================
-# LOAD TRAINED MODEL (NO RETRAINING)
+# LOAD TRAINED MODEL
 # =========================
 model = torch.load("concrete_model.pt", weights_only=False)
 
@@ -22,9 +22,7 @@ model = torch.load("concrete_model.pt", weights_only=False)
 # =========================
 X_base = data.gwp_data[0][[0]].clone()
 
-# =========================
-# UI
-# =========================
+
 st.title("Concrete Strength Predictor")
 # =========================
 # DENSITIES (kg/m³)
@@ -38,7 +36,9 @@ DENSITY = {
     "fine": 2650,
     "coarse": 2673.97
 }
-
+# =========================
+# USER INPUTS & VOLUMES
+# =========================
 # =========================
 # HEADER
 # =========================
@@ -163,7 +163,7 @@ with c2:
 )
 
 # =========================
-# ROW — FINE AGGREGATE (USER INPUT WITH LIMIT)
+# ROW 7 — FINE AGGREGATE (USER INPUT)
 # =========================
 c1, gap, c2 = st.columns([3, 1, 2])
 
@@ -180,7 +180,9 @@ with c2:
     """,
     unsafe_allow_html=True
 )
-
+# =========================
+# ROW 8 — AUTO CALCULATED FINE AGGREGATE (to fit total volume of 1m3)
+# =========================
 # calculate volumes WITHOUT fine first
 base_volume = (
     vol_cement + vol_flyash + vol_slag +
@@ -246,6 +248,7 @@ st.write(f"### Total Volume = {total_volume:.4f} m³")
 
 if total_volume > 1:
     st.error("❌ Total volume exceeds 1 m³")
+     st.stop()
 else:
     st.success("✅ Total volume within limit")
 
