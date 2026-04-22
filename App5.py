@@ -148,7 +148,7 @@ with c2:
 c1, gap, c2 = st.columns([3, 1, 2])
 
 with c1:
-    fine = st.number_input("Fine Aggregate (kg/m3) [Range: 500 – 2000 kg/m³]",min_value=500,max_value=2000, value=700, step=1)
+    fine = st.number_input("Fine Aggregate (kg/m3) [Range: 500 – 2000 kg/m³]",min_value=500,max_value=2000, value=920, step=1)
 
 vol_fine = fine/ DENSITY["fine"]
 
