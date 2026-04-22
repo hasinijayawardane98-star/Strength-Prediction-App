@@ -347,42 +347,6 @@ total_cost = (
     coarse * PRICE["coarse"]
 )
 
-student_name = st.text_input("👤 Enter your name or group name")
-
-# =========================
-# MODE SELECTION
-# =========================
-admin_mode = st.checkbox("🔐 Admin Mode")
-
-if admin_mode:
-    mode = st.radio("Select Mode:", ["🧪 Test Mode", "🎓 Class Mode"])
-else:
-    mode = "🎓 Class Mode"
-
-# =========================
-# CONNECT TO GOOGLE SHEETS
-# =========================
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime
-import pandas as pd
-
-scope = [
-    "https://spreadsheets.google.com/feeds",
-    "https://www.googleapis.com/auth/drive"
-]
-
-creds = ServiceAccountCredentials.from_json_keyfile_name(
-    "credentials.json", scope
-)
-client = gspread.authorize(creds)
-
-if mode == "🧪 Test Mode":
-    sheet = client.open("Concrete_Test").sheet1
-else:
-    sheet = client.open("Concrete_Class").sheet1
-
-
 # =========================
 # NAME INPUT
 # =========================
