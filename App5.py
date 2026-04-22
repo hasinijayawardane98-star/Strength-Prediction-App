@@ -156,7 +156,7 @@ with c2:
     st.markdown(
     f"""
     Fine Aggregate Volume  
-    <b style='font-size:16px;'>{input_vol_fine:.4f} </b>
+    <b style='font-size:16px;'>{vol_fine:.4f} </b>
     """,
     unsafe_allow_html=True
 )
