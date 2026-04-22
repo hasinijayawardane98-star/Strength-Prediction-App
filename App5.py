@@ -24,6 +24,7 @@ X_base = data.gwp_data[0][[0]].clone()
 
 
 st.title("Concrete Strength Predictor")
+admin_mode = st.checkbox("🔐 Admin Mode")
 # =========================
 # DENSITIES (kg/m³)
 # =========================
