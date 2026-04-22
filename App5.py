@@ -219,11 +219,12 @@ else:
 # =========================
 cementitious = cement + fly_ash + slag
 
-st.markdown("---")
 
 if cementitious > 0:
     w_cm = water / cementitious
     st.info(f"Water-to-Cementitious Ratio (w/cm) = {w_cm:.3f}")
+
+st.markdown("---")
 
 # =========================
 # FUNCTION: BUILD INPUT
