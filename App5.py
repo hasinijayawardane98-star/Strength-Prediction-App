@@ -187,7 +187,7 @@ if total_volume < lower_limit:
 
 elif total_volume > upper_limit:
     st.error(f"❌ Total volume too HIGH (must be ≤ {upper_limit:.2f} m³)")
-     st.warning("⚠️ Total volume too low !! Please adjust your inputs and try again")
+    st.warning("⚠️ Total volume too low !! Please adjust your inputs and try again")
     st.stop()
 
 else:
