@@ -206,10 +206,10 @@ with col2:
         unsafe_allow_html=True
     )
 if total_volume < lower_limit:
-    st.error("❌ Total volume is too low (±1% tolerance). Adjust inputs.")
+    st.error("❌ Total volume is too low. Please adjust inputs to stay within ±1% of the target (1 m³).")
 
 elif total_volume > upper_limit:
-    st.error("❌ Total volume too high (±1% tolerance). Adjust inputs.")
+    st.error("❌ Total volume is too high. Please adjust inputs to stay within ±1% of the target (1 m³).")
 
 else:
     st.success("✅ Total volume is within ±1% tolerance of the target (1 m³).")
