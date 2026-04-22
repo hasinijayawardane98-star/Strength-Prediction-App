@@ -178,7 +178,7 @@ TOL = 0.01   # 1%
 lower_limit = 1 - TOL
 upper_limit = 1 + TOL
 
-col1, col2 = st.columns(2)
+col1, gap, col2 = st.columns([3, 1, 2])
 
 with col1:
     st.markdown(
