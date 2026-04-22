@@ -24,7 +24,6 @@ X_base = data.gwp_data[0][[0]].clone()
 
 
 st.title("Concrete Strength Predictor")
-admin_mode = st.checkbox("🔐 Admin Mode")
 # =========================
 # DENSITIES (kg/m³)
 # =========================
@@ -339,65 +338,15 @@ PRICE = {
     "fine": 0.02,
     "coarse": 0.02
 }
-total_cost = (
-    cement * PRICE["cement"] +
-    fly_ash * PRICE["fly_ash"] +
-    slag * PRICE["slag"] +
-    water * PRICE["water"] +
-    fine * PRICE["fine"] +
-    coarse * PRICE["coarse"]
-)
+if st.button("💰 Get Cost"):
 
-# =========================
-# NAME INPUT
-# =========================
-student_name = st.text_input("👤 Enter your Name / Group")
+    total_cost = (
+        cement * PRICE["cement"] +
+        fly_ash * PRICE["fly_ash"] +
+        slag * PRICE["slag"] +
+        water * PRICE["water"] +
+        fine * PRICE["fine"] +
+        coarse * PRICE["coarse"]
+    )
 
-if "submissions" not in st.session_state:
-    st.session_state.submissions = []
-
-from datetime import datetime
-
-if st.button("🏁 Submit Mix"):
-
-    if student_name.strip() == "":
-        st.error("❌ Enter name")
-        st.stop()
-
-    if 'strength_28' not in locals() or 'gwp_value' not in locals():
-        st.error("❌ Generate results first")
-        st.stop()
-
-    submission = {
-        "Name": student_name,
-        "Volume": total_volume,
-        "Strength": strength_28,
-        "GWP": gwp_value,
-        "Cost": total_cost,
-        "Time": datetime.now().strftime("%H:%M:%S")
-    }
-
-    st.session_state.submissions.append(submission)
-
-    st.success("✅ Submission saved!")
-
-import pandas as pd
-
-if admin_mode and st.button("📥 Download Results"):
-
-    df = pd.DataFrame(st.session_state.submissions)
-
-    df.to_excel("results.xlsx", index=False)
-
-    with open("results.xlsx", "rb") as f:
-        st.download_button(
-            "⬇️ Download Excel",
-            f,
-            file_name="Concrete_Results.xlsx"
-        )
-
-if admin_mode and st.button("🗑 Reset All Submissions"):
-    st.session_state.submissions = []
-    st.success("All submissions cleared!")
-
-admin_mode = st.checkbox("Admin Mode")
+    st.success(f"💰 Total Cost = ${total_cost:.3f} per m³")
