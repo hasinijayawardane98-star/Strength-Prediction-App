@@ -123,28 +123,8 @@ with c2:
     """,
     unsafe_allow_html=True
 )
-
 # =========================
-# ROW 5 — HRWR
-# =========================
-c1, gap, c2 = st.columns([3, 1, 2])
-
-with c1:
-    hrwr = st.number_input("HRWR (kg/m3)", value=0, step=1)
-
-vol_hrwr = hrwr / DENSITY["hrwr"]
-
-with c2:
-    st.markdown(
-    f"""
-    HRWR Volume  
-    <b style='font-size:16px;'>{vol_hrwr:.4f} </b>
-    """,
-    unsafe_allow_html=True
-)
-
-# =========================
-# ROW 6 — COARSE AGG
+# ROW 5 — COARSE AGG
 # =========================
 c1, gap, c2 = st.columns([3, 1, 2])
 
@@ -163,14 +143,14 @@ with c2:
 )
 
 # =========================
-# ROW 7 — FINE AGGREGATE (USER INPUT)
+# ROW 6 — FINE AGGREGATE 
 # =========================
 c1, gap, c2 = st.columns([3, 1, 2])
 
 with c1:
-    fine_input = st.number_input("Fine Aggregate (kg/m3),[Range: 500 – 2000 kg/m³]",min_value=500,max_value=2000, value=700, step=1)
+    fine = st.number_input("Fine Aggregate (kg/m3),[Range: 500 – 2000 kg/m³]",min_value=500,max_value=2000, value=700, step=1)
 
-input_vol_fine = fine_input/ DENSITY["fine"]
+vol_fine = fine_input/ DENSITY["fine"]
 
 with c2:
     st.markdown(
@@ -180,51 +160,39 @@ with c2:
     """,
     unsafe_allow_html=True
 )
+    
 # =========================
-# ROW 8 — AUTO CALCULATED FINE AGGREGATE (to fit total volume of 1m3)
+# TOTAL VOLUME
 # =========================
-# calculate volumes WITHOUT fine first
-base_volume = (
+
+# calculate volumes
+total_volume = (
     vol_cement + vol_flyash + vol_slag +
-    vol_water + vol_hrwr + vol_coarse
+    vol_water + vol_coarse + vol_fine
 )
-
-# maximum allowed fine volume
-max_fine_volume = 1 - base_volume
-
-if max_fine_volume > 0:
-    max_fine_mass = max_fine_volume * DENSITY["fine"]
-else:
-    max_fine_mass = 0
 
 # check if user input is valid
-if fine_input > max_fine_mass:
-    st.warning("⚠️ Fine aggregate too high → adjusted to fit 1 m³ total volume")
+
+TOL = 0.01   # 1%
+
+lower_limit = 1 - TOL
+upper_limit = 1 + TOL
+
+st.write(f"### Total Volume = {total_volume:.4f} m³")
+
+if total_volume < lower_limit:
+    st.error(f"❌ Total volume too LOW (must be ≥ {lower_limit:.2f} m³)")
+    st.warning("⚠️ Total volume too high !! Please adjust your inputs and try again")
+    st.stop()
+
+elif total_volume > upper_limit:
+    st.error(f"❌ Total volume too HIGH (must be ≤ {upper_limit:.2f} m³)")
+     st.warning("⚠️ Total volume too low !! Please adjust your inputs and try again")
+    st.stop()
+
 else:
-    st.warning("⚠️ Fine aggregate too low → adjusted to fit 1 m³ total volume")
+    st.success("✅ Total volume within acceptable range (±1%)")
 
-fine = max_fine_mass
-
-# compute final fine volume
-vol_fine = fine / DENSITY["fine"]
-
-c1, gap, c2 = st.columns([3, 1, 2])
-with c1:
-    st.markdown(
-    f"""
-    Auto Calculated Fine Aggregate (kg/m3)  
-    <b style='font-size:16px;'>{fine:.4f} </b>
-    """,
-    unsafe_allow_html=True
-)
-with c2:
-    st.markdown(
-    f"""
-    Auto Calculated Fine Aggregate Volume  
-    <b style='font-size:16px;'>{vol_fine:.4f} </b>
-    """,
-    unsafe_allow_html=True
-)
 # =========================
 # w/cm RATIO
 # =========================
@@ -237,21 +205,6 @@ if cementitious > 0:
     st.info(f"Water-to-Cementitious Ratio (w/cm) = {w_cm:.3f}")
 
 # =========================
-# TOTAL VOLUME
-# =========================
-total_volume = (
-    vol_cement + vol_flyash + vol_slag +
-    vol_water + vol_hrwr + vol_fine + vol_coarse
-)
-
-st.write(f"### Total Volume = {total_volume:.4f} m³")
-
-if total_volume > 1:
-    st.error("❌ Total volume exceeds 1 m³. Please adjust your inputs and try again")
-else:
-    st.success("✅ Total volume within limit")
-
-# =========================
 # FUNCTION: BUILD INPUT
 # =========================
 def build_input(time_value):
@@ -262,7 +215,7 @@ def build_input(time_value):
     X[0, cols.index("Fly Ash (kg/m3)")] = float(fly_ash)
     X[0, cols.index("Slag (kg/m3)")] = float(slag)
     X[0, cols.index("Water (kg/m3)")] = float(water)
-    X[0, cols.index("HRWR (kg/m3)")] = float(hrwr)
+    X[0, cols.index("HRWR (kg/m3)")] = 0.0
     X[0, cols.index("Fine Aggregate (kg/m3)")] = float(fine)
     X[0, cols.index("Coarse Aggregates (kg/m3)")] = float(coarse)
 
