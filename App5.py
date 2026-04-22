@@ -329,3 +329,119 @@ if st.button("Generate Strength Curve"):
 
 
     st.pyplot(fig)
+
+PRICE = {
+    "cement": 0.13,     # $/kg
+    "fly_ash": 0.04,
+    "slag": 0.07,
+    "water": 0.001,
+    "fine": 0.02,
+    "coarse": 0.02
+}
+total_cost = (
+    cement * PRICE["cement"] +
+    fly_ash * PRICE["fly_ash"] +
+    slag * PRICE["slag"] +
+    water * PRICE["water"] +
+    fine * PRICE["fine"] +
+    coarse * PRICE["coarse"]
+)
+
+student_name = st.text_input("👤 Enter your name or group name")
+
+# =========================
+# MODE SELECTION
+# =========================
+admin_mode = st.checkbox("🔐 Admin Mode")
+
+if admin_mode:
+    mode = st.radio("Select Mode:", ["🧪 Test Mode", "🎓 Class Mode"])
+else:
+    mode = "🎓 Class Mode"
+
+# =========================
+# CONNECT TO GOOGLE SHEETS
+# =========================
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
+import pandas as pd
+
+scope = [
+    "https://spreadsheets.google.com/feeds",
+    "https://www.googleapis.com/auth/drive"
+]
+
+creds = ServiceAccountCredentials.from_json_keyfile_name(
+    "credentials.json", scope
+)
+client = gspread.authorize(creds)
+
+if mode == "🧪 Test Mode":
+    sheet = client.open("Concrete_Test").sheet1
+else:
+    sheet = client.open("Concrete_Class").sheet1
+
+
+# =========================
+# NAME INPUT
+# =========================
+student_name = st.text_input("👤 Enter your Name / Group")
+
+
+# =========================
+# SUBMIT BUTTON
+# =========================
+if st.button("🏁 Submit Mix"):
+
+    if student_name.strip() == "":
+        st.error("❌ Please enter your name")
+        st.stop()
+
+    # ensure results exist
+    if 'strength_28' not in locals() or 'gwp_value' not in locals():
+        st.error("❌ Please generate Strength and GWP first")
+        st.stop()
+
+    sheet.append_row([
+        student_name,
+        total_volume,
+        strength_28,
+        gwp_value,
+        total_cost,
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ])
+
+    st.success(f"✅ Submitted to {mode}")
+
+
+# =========================
+# ADMIN: VIEW & DOWNLOAD DATA
+# =========================
+if admin_mode:
+
+    st.markdown("---")
+    st.subheader("📊 Admin Panel")
+
+    if st.button("🔍 View Submissions"):
+        data = sheet.get_all_records()
+        df = pd.DataFrame(data)
+        st.dataframe(df)
+
+    if st.button("📥 Download Excel"):
+        data = sheet.get_all_records()
+        df = pd.DataFrame(data)
+
+        file_name = (
+            "Test_Data.xlsx" if mode == "🧪 Test Mode"
+            else "Class_Data.xlsx"
+        )
+
+        df.to_excel(file_name, index=False)
+
+        with open(file_name, "rb") as f:
+            st.download_button(
+                "⬇️ Download File",
+                f,
+                file_name=file_name
+            )
