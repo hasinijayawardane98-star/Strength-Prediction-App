@@ -180,46 +180,31 @@ upper_limit = 1 + TOL
 
 col1, col2 = st.columns(2)
 
-# TARGET VOLUME (GREEN BOX)
 with col1:
     st.markdown(
         """
-        <div style="
-            background-color:#d4edda;
-            padding:15px;
-            border-radius:10px;
-            text-align:center;
-            font-size:22px;
-            font-weight:600;
-            border:1px solid #c3e6cb;">
-            
-            🎯 Target Volume  
-            <div style='font-size:28px; font-weight:bold;'>1.000 m³</div>
+        <div style='font-size:22px; font-weight:600;'>
+        🎯 Target Volume
+        </div>
+        <div style='font-size:28px; font-weight:bold;'>
+        1.000 m³
         </div>
         """,
         unsafe_allow_html=True
     )
 
-# TOTAL VOLUME (DYNAMIC BOX)
 with col2:
     st.markdown(
         f"""
-        <div style="
-            background-color:#f8f9fa;
-            padding:15px;
-            border-radius:10px;
-            text-align:center;
-            font-size:22px;
-            font-weight:600;
-            border:1px solid #ddd;">
-            
-            Total Volume  
-            <div style='font-size:28px; font-weight:bold;'>{total_volume:.4f} m³</div>
+        <div style='font-size:22px; font-weight:600;'>
+        ➡️ Total Volume
+        </div>
+        <div style='font-size:28px; font-weight:bold;'>
+        {total_volume:.4f} m³
         </div>
         """,
         unsafe_allow_html=True
     )
-
 if total_volume < lower_limit:
     st.error("❌ Total volume is too low (±1% tolerance). Adjust inputs.")
 
