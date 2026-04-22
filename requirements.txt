@@ -6,3 +6,6 @@ pandas
 torch
 gpytorch
 botorch
+
+gspread
+oauth2client
