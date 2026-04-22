@@ -148,7 +148,7 @@ with c2:
 c1, gap, c2 = st.columns([3, 1, 2])
 
 with c1:
-    fine = st.number_input("Fine Aggregate (kg/m3),[Range: 500 – 2000 kg/m³]",min_value=500,max_value=2000, value=700, step=1)
+    fine = st.number_input("Fine Aggregate (kg/m3) [Range: 500 – 2000 kg/m³]",min_value=500,max_value=2000, value=700, step=1)
 
 vol_fine = fine/ DENSITY["fine"]
 
@@ -179,19 +179,16 @@ lower_limit = 1 - TOL
 upper_limit = 1 + TOL
 
 st.write(f"### Total Volume = {total_volume:.4f} m³")
+st.info("🎯 Target total volume = 1.000 m³. Please ensure your mix is within ±1% of the target volume.")
 
 if total_volume < lower_limit:
-    st.error(f"❌ Total volume too LOW (must be ≥ {lower_limit:.2f} m³)")
-    st.warning("⚠️ Total volume too high !! Please adjust your inputs and try again")
-    st.stop()
+    st.error("❌ Total volume is too low (±1% tolerance). Adjust inputs.")
 
 elif total_volume > upper_limit:
-    st.error(f"❌ Total volume too HIGH (must be ≤ {upper_limit:.2f} m³)")
-    st.warning("⚠️ Total volume too low !! Please adjust your inputs and try again")
-    st.stop()
+    st.error("❌ Total volume too high (±1% tolerance). Adjust inputs.")
 
 else:
-    st.success("✅ Total volume within acceptable range (±1%)")
+    st.success("✅ Total volume is within ±1% tolerance of the target (1 m³).")
 
 # =========================
 # w/cm RATIO
