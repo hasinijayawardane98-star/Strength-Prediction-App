@@ -388,60 +388,51 @@ else:
 # =========================
 student_name = st.text_input("👤 Enter your Name / Group")
 
+if "submissions" not in st.session_state:
+    st.session_state.submissions = []
 
-# =========================
-# SUBMIT BUTTON
-# =========================
+from datetime import datetime
+
 if st.button("🏁 Submit Mix"):
 
     if student_name.strip() == "":
-        st.error("❌ Please enter your name")
+        st.error("❌ Enter name")
         st.stop()
 
-    # ensure results exist
     if 'strength_28' not in locals() or 'gwp_value' not in locals():
-        st.error("❌ Please generate Strength and GWP first")
+        st.error("❌ Generate results first")
         st.stop()
 
-    sheet.append_row([
-        student_name,
-        total_volume,
-        strength_28,
-        gwp_value,
-        total_cost,
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    ])
+    submission = {
+        "Name": student_name,
+        "Volume": total_volume,
+        "Strength": strength_28,
+        "GWP": gwp_value,
+        "Cost": total_cost,
+        "Time": datetime.now().strftime("%H:%M:%S")
+    }
 
-    st.success(f"✅ Submitted to {mode}")
+    st.session_state.submissions.append(submission)
 
+    st.success("✅ Submission saved!")
 
-# =========================
-# ADMIN: VIEW & DOWNLOAD DATA
-# =========================
-if admin_mode:
+import pandas as pd
 
-    st.markdown("---")
-    st.subheader("📊 Admin Panel")
+if admin_mode and st.button("📥 Download Results"):
 
-    if st.button("🔍 View Submissions"):
-        data = sheet.get_all_records()
-        df = pd.DataFrame(data)
-        st.dataframe(df)
+    df = pd.DataFrame(st.session_state.submissions)
 
-    if st.button("📥 Download Excel"):
-        data = sheet.get_all_records()
-        df = pd.DataFrame(data)
+    df.to_excel("results.xlsx", index=False)
 
-        file_name = (
-            "Test_Data.xlsx" if mode == "🧪 Test Mode"
-            else "Class_Data.xlsx"
+    with open("results.xlsx", "rb") as f:
+        st.download_button(
+            "⬇️ Download Excel",
+            f,
+            file_name="Concrete_Results.xlsx"
         )
 
-        df.to_excel(file_name, index=False)
+if admin_mode and st.button("🗑 Reset All Submissions"):
+    st.session_state.submissions = []
+    st.success("All submissions cleared!")
 
-        with open(file_name, "rb") as f:
-            st.download_button(
-                "⬇️ Download File",
-                f,
-                file_name=file_name
-            )
+admin_mode = st.checkbox("Admin Mode")
