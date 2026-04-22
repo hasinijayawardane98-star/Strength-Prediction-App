@@ -287,7 +287,7 @@ if st.button("🌍 Get GWP"):
 # =========================
 # STRENGTH CURVE
 # =========================
-if st.button(""📈 Generate Strength Curve"):
+if st.button(""Generate Strength Curve"):
 
     days = np.linspace(1, 28, 50)   # 🔥 KEY FIX
     predictions = []
