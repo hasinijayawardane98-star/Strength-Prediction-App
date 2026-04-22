@@ -225,6 +225,7 @@ if cementitious > 0:
     st.info(f"Water-to-Cementitious Ratio (w/cm) = {w_cm:.3f}")
 
 st.markdown("---")
+st.markdown("### 🎮 Ready? Let’s compute your mix performance...")
 
 # =========================
 # FUNCTION: BUILD INPUT
