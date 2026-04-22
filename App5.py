@@ -227,6 +227,8 @@ if cementitious > 0:
 st.markdown("---")
 st.markdown("### 🎮 Ready? Let’s compute your mix performance...")
 
+hrwr = 0
+
 # =========================
 # FUNCTION: BUILD INPUT
 # =========================
@@ -238,7 +240,7 @@ def build_input(time_value):
     X[0, cols.index("Fly Ash (kg/m3)")] = float(fly_ash)
     X[0, cols.index("Slag (kg/m3)")] = float(slag)
     X[0, cols.index("Water (kg/m3)")] = float(water)
-    X[0, cols.index("HRWR (kg/m3)")] = 0.0
+    X[0, cols.index("HRWR (kg/m3)")] = float(hrwr)
     X[0, cols.index("Fine Aggregate (kg/m3)")] = float(fine)
     X[0, cols.index("Coarse Aggregates (kg/m3)")] = float(coarse)
 
