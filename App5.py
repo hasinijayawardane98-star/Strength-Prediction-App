@@ -260,7 +260,7 @@ if st.button("🧱 Get 28-Day Strength"):
     pred = post.mean.detach().squeeze()
 
     strength_28 = pred.item()
-
+    st.session_state["strength"] = strength_28
     st.success(f"🧱 28-Day Strength = {strength_28:.3f} psi")
 
 # =========================
@@ -281,6 +281,7 @@ if st.button("🌍 Get GWP"):
    post = model.gwp_model.posterior(X)
    pred = post.mean.detach().squeeze()
    gwp_value = -pred.mean().item()
+   st.session_state["gwp"] = gwp_value 
    st.success(f"🌍 GWP = {gwp_value:.3f} kg CO₂/m³")
 
 
@@ -349,4 +350,44 @@ if st.button("💰 Get Cost"):
         coarse * PRICE["coarse"]
     )
 
+    st.session_state["cost"] = total_cost
     st.success(f"💰 Total Cost = ${total_cost:.3f} per m³")
+
+student_name = st.text_input("👤 Enter your Name / Group")
+
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+scope = [
+    "https://spreadsheets.google.com/feeds",
+    "https://www.googleapis.com/auth/drive"
+]
+
+creds = ServiceAccountCredentials.from_json_keyfile_dict(
+    st.secrets["gcp_service_account"], scope
+)
+
+client = gspread.authorize(creds)
+
+if st.button("🚀 Submit Mix"):
+
+    if student_name == "":
+        st.error("Please enter your name")
+    
+    elif "strength" not in st.session_state or \
+         "gwp" not in st.session_state or \
+         "cost" not in st.session_state:
+        st.error("Please generate Strength, GWP, and Cost first")
+
+    else:
+        sheet.append_row([
+            student_name,
+            st.session_state["strength"],
+            st.session_state["gwp"],
+            st.session_state["cost"],
+            total_volume
+        ])
+
+        st.success("✅ Submitted successfully!")
+
+sheet = client.open("Concrete Game Results").sheet1
