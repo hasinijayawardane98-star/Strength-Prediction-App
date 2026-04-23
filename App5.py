@@ -197,7 +197,7 @@ with col2:
     st.markdown(
         f"""
         <div style='font-size:22px; font-weight:600;'>
-        ➡️ Total Volume
+        ➡️ '      ' Total Volume
         </div>
         <div style='font-size:28px; font-weight:bold;'>
         {total_volume:.4f} m³
