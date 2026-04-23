@@ -187,7 +187,7 @@ with col1:
         🎯 Target Volume
         </div>
         <div style='font-size:28px; font-weight:bold;'>
-        '   ' 1.000 m³
+        1.000 m³
         </div>
         """,
         unsafe_allow_html=True
@@ -200,7 +200,7 @@ with col2:
         ➡️ Total Volume
         </div>
         <div style='font-size:28px; font-weight:bold;'>
-        {   total_volume:.4f} m³
+        {total_volume:.4f} m³
         </div>
         """,
         unsafe_allow_html=True
