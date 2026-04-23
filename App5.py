@@ -278,22 +278,20 @@ if st.button("🧱 Get 28-Day Strength, 🌍 GWP, and 💰 Cost "):
     gwp_value = -pred.mean().item()
     st.session_state["gwp"] = gwp_value 
     st.success(f"🌍 GWP = {gwp_value:.3f} kg CO₂/m³")
-PRICE = {
+    PRICE = {
     "cement": 0.13,     # $/kg
     "fly_ash": 0.04,
     "slag": 0.07,
     "water": 0.001,
     "fine": 0.02,
-    "coarse": 0.02
-}
-     total_cost = (
+    "coarse": 0.02}
+    total_cost = (
         cement * PRICE["cement"] +
         fly_ash * PRICE["fly_ash"] +
         slag * PRICE["slag"] +
         water * PRICE["water"] +
         fine * PRICE["fine"] +
-        coarse * PRICE["coarse"]
-    )
+        coarse * PRICE["coarse"])
 
      st.session_state["cost"] = total_cost
      st.success(f"💰 Total Cost = ${total_cost:.3f} per m³")
