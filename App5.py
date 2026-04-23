@@ -264,20 +264,20 @@ if st.button("🧱 Get 28-Day Strength, 🌍 GWP, and 💰 Cost "):
     st.success(f"🧱 28-Day Strength = {strength_28:.3f} psi")
 
     # GWP model DOES NOT use time → use X without time column
-   X = X_base.clone()
-   X[0, cols.index("Cement (kg/m3)")] = float(cement)
-   X[0, cols.index("Fly Ash (kg/m3)")] = float(fly_ash)
-   X[0, cols.index("Slag (kg/m3)")] = float(slag)
-   X[0, cols.index("Water (kg/m3)")] = float(water)
-   X[0, cols.index("HRWR (kg/m3)")] = float(hrwr)
-   X[0, cols.index("Fine Aggregate (kg/m3)")] = float(fine)
-   X[0, cols.index("Coarse Aggregates (kg/m3)")] = float(coarse)
+    X = X_base.clone()
+    X[0, cols.index("Cement (kg/m3)")] = float(cement)
+    X[0, cols.index("Fly Ash (kg/m3)")] = float(fly_ash)
+    X[0, cols.index("Slag (kg/m3)")] = float(slag)
+    X[0, cols.index("Water (kg/m3)")] = float(water)
+    X[0, cols.index("HRWR (kg/m3)")] = float(hrwr)
+    X[0, cols.index("Fine Aggregate (kg/m3)")] = float(fine)
+    X[0, cols.index("Coarse Aggregates (kg/m3)")] = float(coarse)
    
-   post = model.gwp_model.posterior(X)
-   pred = post.mean.detach().squeeze()
-   gwp_value = -pred.mean().item()
-   st.session_state["gwp"] = gwp_value 
-   st.success(f"🌍 GWP = {gwp_value:.3f} kg CO₂/m³")
+    post = model.gwp_model.posterior(X)
+    pred = post.mean.detach().squeeze()
+    gwp_value = -pred.mean().item()
+    st.session_state["gwp"] = gwp_value 
+    st.success(f"🌍 GWP = {gwp_value:.3f} kg CO₂/m³")
 PRICE = {
     "cement": 0.13,     # $/kg
     "fly_ash": 0.04,
@@ -286,7 +286,7 @@ PRICE = {
     "fine": 0.02,
     "coarse": 0.02
 }
-    total_cost = (
+     total_cost = (
         cement * PRICE["cement"] +
         fly_ash * PRICE["fly_ash"] +
         slag * PRICE["slag"] +
@@ -295,8 +295,8 @@ PRICE = {
         coarse * PRICE["coarse"]
     )
 
-    st.session_state["cost"] = total_cost
-    st.success(f"💰 Total Cost = ${total_cost:.3f} per m³")
+     st.session_state["cost"] = total_cost
+     st.success(f"💰 Total Cost = ${total_cost:.3f} per m³")
 
 # =========================
 # STRENGTH CURVE
