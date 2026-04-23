@@ -370,6 +370,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(
 client = gspread.authorize(creds)
 
 if st.button("🚀 Submit Mix"):
+    sheet = client.open("Concrete Game Results").sheet1
 
     if student_name == "":
         st.error("Please enter your name")
@@ -390,4 +391,4 @@ if st.button("🚀 Submit Mix"):
 
         st.success("✅ Submitted successfully!")
 
-sheet = client.open("Concrete Game Results").sheet1
+
