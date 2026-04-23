@@ -252,7 +252,7 @@ def build_input(time_value):
 # =========================
 # 28-DAY STRENGTH
 # =========================
-if st.button("🧱 Get 28-Day Strength"):
+if st.button("🧱 Get 28-Day Strength, 🌍 GWP, and 💰 Cost "):
 
     Xt = build_input(28)
 
@@ -262,11 +262,6 @@ if st.button("🧱 Get 28-Day Strength"):
     strength_28 = pred.item()
     st.session_state["strength"] = strength_28
     st.success(f"🧱 28-Day Strength = {strength_28:.3f} psi")
-
-# =========================
-# GWP VALUE
-# =========================
-if st.button("🌍 Get GWP"):
 
     # GWP model DOES NOT use time → use X without time column
    X = X_base.clone()
@@ -283,7 +278,25 @@ if st.button("🌍 Get GWP"):
    gwp_value = -pred.mean().item()
    st.session_state["gwp"] = gwp_value 
    st.success(f"🌍 GWP = {gwp_value:.3f} kg CO₂/m³")
+PRICE = {
+    "cement": 0.13,     # $/kg
+    "fly_ash": 0.04,
+    "slag": 0.07,
+    "water": 0.001,
+    "fine": 0.02,
+    "coarse": 0.02
+}
+    total_cost = (
+        cement * PRICE["cement"] +
+        fly_ash * PRICE["fly_ash"] +
+        slag * PRICE["slag"] +
+        water * PRICE["water"] +
+        fine * PRICE["fine"] +
+        coarse * PRICE["coarse"]
+    )
 
+    st.session_state["cost"] = total_cost
+    st.success(f"💰 Total Cost = ${total_cost:.3f} per m³")
 
 # =========================
 # STRENGTH CURVE
@@ -326,32 +339,10 @@ if st.button("📈 Generate Strength Curve"):
     ax.set_xlabel("Days")
     ax.set_ylabel("Strength (psi)")
     ax.set_title("Predicted Concrete Strength Curve")
-    
-
 
     st.pyplot(fig)
 
-PRICE = {
-    "cement": 0.13,     # $/kg
-    "fly_ash": 0.04,
-    "slag": 0.07,
-    "water": 0.001,
-    "fine": 0.02,
-    "coarse": 0.02
-}
-if st.button("💰 Get Cost"):
 
-    total_cost = (
-        cement * PRICE["cement"] +
-        fly_ash * PRICE["fly_ash"] +
-        slag * PRICE["slag"] +
-        water * PRICE["water"] +
-        fine * PRICE["fine"] +
-        coarse * PRICE["coarse"]
-    )
-
-    st.session_state["cost"] = total_cost
-    st.success(f"💰 Total Cost = ${total_cost:.3f} per m³")
 
 student_name = st.text_input("👤 Enter your Name / Group")
 
