@@ -248,6 +248,7 @@ def build_input(time_value):
 # =========================
 # 28-DAY STRENGTH
 # =========================
+@st.cache_data
 if st.button("🧱 Get 28-Day Strength, 🌍 GWP, and 💰 Cost "):
 
     Xt = build_input(28)
