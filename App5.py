@@ -183,11 +183,9 @@ col1, gap, col2 = st.columns([3, 1, 2])
 with col1:
     st.markdown(
         """
-        <div style='font-size:22px; font-weight:600;'>
-        🎯 Target Volume
-        </div>
-        <div style= 'text-align: center; 'font-size:28px; font-weight:bold;'>
-        1.000 m³
+        <div style='text-align: center;'>
+        <div style='font-size:22px; font-weight:600;'>🎯 Target Volume</div>
+        <div style='font-size:28px; font-weight:bold;'>1.000 m³</div>
         </div>
         """,
         unsafe_allow_html=True
@@ -196,11 +194,9 @@ with col1:
 with col2:
     st.markdown(
         f"""
-        <div style='font-size:22px; font-weight:600;'>
-        ➡️ Total Volume
-        </div>
-        <div style= 'text-align: center; 'font-size:28px; font-weight:bold;'>
-        {total_volume:.4f} m³
+        <div style='text-align: center;'>
+        <div style='font-size:22px; font-weight:600;'>➡️ Total Volume</div>
+        <div style='font-size:28px; font-weight:bold;'>{total_volume:.4f} m³</div>
         </div>
         """,
         unsafe_allow_html=True
