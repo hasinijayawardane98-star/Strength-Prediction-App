@@ -293,8 +293,8 @@ if st.button("🧱 Get 28-Day Strength, 🌍 GWP, and 💰 Cost "):
         fine * PRICE["fine"] +
         coarse * PRICE["coarse"])
 
-     st.session_state["cost"] = total_cost
-     st.success(f"💰 Total Cost = ${total_cost:.3f} per m³")
+    st.session_state["cost"] = total_cost
+    st.success(f"💰 Total Cost = ${total_cost:.3f} per m³")
 
 # =========================
 # STRENGTH CURVE
