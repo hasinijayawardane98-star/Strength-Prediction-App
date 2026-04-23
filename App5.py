@@ -186,7 +186,7 @@ with col1:
         <div style='font-size:22px; font-weight:600;'>
         🎯 Target Volume
         </div>
-        <div style='font-size:28px; font-weight:bold;'>
+        <div style= 'text-align: center; 'font-size:28px; font-weight:bold;'>
         1.000 m³
         </div>
         """,
@@ -199,7 +199,7 @@ with col2:
         <div style='font-size:22px; font-weight:600;'>
         ➡️ Total Volume
         </div>
-        <div style='font-size:28px; font-weight:bold;'>
+        <div style= 'text-align: center; 'font-size:28px; font-weight:bold;'>
         {total_volume:.4f} m³
         </div>
         """,
