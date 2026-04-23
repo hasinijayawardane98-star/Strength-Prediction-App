@@ -248,8 +248,7 @@ def build_input(time_value):
 # =========================
 # 28-DAY STRENGTH
 # =========================
-@st.cache_data
-if st.button("🧱 Get 28-Day Strength, 🌍 GWP, and 💰 Cost "):
+if st.button("🧱 Get 28-Day Strength"):
 
     Xt = build_input(28)
 
@@ -259,6 +258,8 @@ if st.button("🧱 Get 28-Day Strength, 🌍 GWP, and 💰 Cost "):
     strength_28 = pred.item()
     st.session_state["strength"] = strength_28
     st.success(f"🧱 28-Day Strength = {strength_28:.3f} psi")
+
+if st.button("🌍Get GWP"):
 
     # GWP model DOES NOT use time → use X without time column
     X = X_base.clone()
@@ -275,6 +276,8 @@ if st.button("🧱 Get 28-Day Strength, 🌍 GWP, and 💰 Cost "):
     gwp_value = -pred.mean().item()
     st.session_state["gwp"] = gwp_value 
     st.success(f"🌍 GWP = {gwp_value:.3f} kg CO₂/m³")
+    
+if st.button("💰 Get Cost"):
     PRICE = {
     "cement": 0.13,     # $/kg
     "fly_ash": 0.04,
