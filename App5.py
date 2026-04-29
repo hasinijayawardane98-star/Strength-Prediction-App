@@ -259,7 +259,7 @@ if st.button("🧱 Get 28-Day Strength"):
     st.session_state["strength"] = strength_28
     st.success(f"🧱 28-Day Strength = {strength_28:.3f} psi")
 
-if st.button("🌍Get GWP"):
+if st.button("🌍 Get GWP"):
 
     # GWP model DOES NOT use time → use X without time column
     X = X_base.clone()
