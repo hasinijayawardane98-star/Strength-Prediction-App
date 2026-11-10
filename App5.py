@@ -21,7 +21,27 @@ model = torch.load("concrete_model.pt", weights_only=False)
 # CREATE BASE INPUT (IMPORTANT)
 # =========================
 X_base = data.gwp_data[0][[0]].clone()
+import shap
 
+@st.cache_resource
+def get_explainer():
+    # Background = real mixes from the training data (7 columns, no time)
+    bg = data.gwp_data[0].detach().cpu().numpy()
+    bg = shap.utils.sample(bg, 100, random_state=0)
+
+    def predict_28(X_np):
+        X = torch.as_tensor(np.asarray(X_np), dtype=X_base.dtype)
+        t = torch.full((X.shape[0], 1), 28.0, dtype=X.dtype)
+        with torch.no_grad():
+            post = model.strength_model.posterior(torch.cat([X, t], dim=1))
+        return post.mean.detach().reshape(-1).numpy()
+
+    return shap.Explainer(
+        predict_28,
+        shap.maskers.Independent(bg),
+        algorithm="permutation",
+        feature_names=list(cols),
+    )
 
 st.title("Concrete Strength Predictor")
 # =========================
@@ -259,6 +279,18 @@ if st.button("🧱 Get 28-Day Strength"):
     st.session_state["strength"] = strength_28
     st.success(f"🧱 28-Day Strength = {strength_28:.3f} psi")
 
+if st.button("🔍 Explain 28-Day Strength (SHAP)"):
+    x_row = build_input(28)[:, :-1].detach().numpy()   # reuse your function, drop time
+    exp = get_explainer()(x_row, max_evals=500)
+
+    shap.plots.waterfall(exp[0], show=False)
+    st.pyplot(plt.gcf())
+    plt.close("all")
+
+    st.caption(
+        f"Average mix in the dataset: {exp.base_values[0]:.0f} psi. "
+        f"Your mix: {exp.base_values[0] + exp.values[0].sum():.0f} psi."
+    )
 if st.button("🌍 Get GWP"):
 
     # GWP model DOES NOT use time → use X without time column
