@@ -24,24 +24,30 @@ X_base = data.gwp_data[0][[0]].clone()
 import shap
 
 @st.cache_resource
-def get_explainer():
-    # Background = real mixes from the training data (7 columns, no time)
+def get_background():
     bg = data.gwp_data[0].detach().cpu().numpy()
-    bg = shap.utils.sample(bg, 100, random_state=0)
+    return shap.utils.sample(bg, 100, random_state=0)
 
-    def predict_28(X_np):
-        X = torch.as_tensor(np.asarray(X_np), dtype=X_base.dtype)
-        t = torch.full((X.shape[0], 1), 28.0, dtype=X.dtype)
-        with torch.no_grad():
-            post = model.strength_model.posterior(torch.cat([X, t], dim=1))
-        return post.mean.detach().reshape(-1).numpy()
+def predict_28(X_np):
+    X = torch.as_tensor(np.asarray(X_np), dtype=X_base.dtype)
+    t = torch.full((X.shape[0], 1), 28.0, dtype=X.dtype)
+    with torch.no_grad():
+        post = model.strength_model.posterior(torch.cat([X, t], dim=1))
+    return post.mean.detach().reshape(-1).numpy()
 
+@st.cache_resource
+def get_explainer():
     return shap.Explainer(
         predict_28,
-        shap.maskers.Independent(bg),
+        shap.maskers.Independent(get_background()),
         algorithm="permutation",
         feature_names=list(cols),
     )
+
+@st.cache_resource
+def get_global_explanation():
+    # SHAP values for all 100 background mixes (computed once, then cached)
+    return get_explainer()(get_background(), max_evals=500)
 
 st.title("Concrete Strength Predictor")
 # =========================
@@ -291,6 +297,32 @@ if st.button("🔍 Explain 28-Day Strength (SHAP)"):
         f"Average mix in the dataset: {exp.base_values[0]:.0f} psi. "
         f"Your mix: {exp.base_values[0] + exp.values[0].sum():.0f} psi."
     )
+if st.button("🧪 Proof: water sweep vs SHAP"):
+    row = build_input(28)[:, :-1].detach().numpy()
+    iw = list(cols).index("Water (kg/m3)")
+
+    # Left plot: change ONLY water, ask the model what it predicts
+    waters = np.linspace(100, 250, 40)
+    rows = np.repeat(row, len(waters), axis=0)
+    rows[:, iw] = waters
+    curve = predict_28(rows)
+
+    # Right plot: SHAP value of water across 100 real mixes
+    with st.spinner("Computing SHAP values for 100 mixes (first time only)..."):
+        exp_all = get_global_explanation()
+
+    fig, ax = plt.subplots(1, 2, figsize=(11, 4))
+    ax[0].plot(waters, curve, lw=3)
+    ax[0].axvline(water, ls="--", color="gray")
+    ax[0].set(title="What the model predicts (only water changes)",
+              xlabel="Water (kg/m3)", ylabel="28-day strength (psi)")
+    ax[1].scatter(exp_all.data[:, iw], exp_all.values[:, iw], s=18)
+    ax[1].axhline(0, color="gray", lw=1)
+    ax[1].set(title="What SHAP says water contributed",
+              xlabel="Water (kg/m3)", ylabel="SHAP value (psi)")
+    plt.tight_layout()
+    st.pyplot(fig)
+    plt.close(fig)
 if st.button("🌍 Get GWP"):
 
     # GWP model DOES NOT use time → use X without time column
