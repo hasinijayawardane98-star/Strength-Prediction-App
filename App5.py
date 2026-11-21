@@ -26,7 +26,8 @@ import shap
 @st.cache_resource
 def get_background():
     bg = data.gwp_data[0].detach().cpu().numpy()
-    return shap.utils.sample(bg, 100, random_state=0)
+    bg = bg[bg[:, list(cols).index("Coarse Aggregates (kg/m3)")] > 0]   # concrete only
+    return shap.utils.sample(bg, min(100, len(bg)), random_state=0)
 
 def predict_28(X_np):
     X = torch.as_tensor(np.asarray(X_np), dtype=X_base.dtype)
